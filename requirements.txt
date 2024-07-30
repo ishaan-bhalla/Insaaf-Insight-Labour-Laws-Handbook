@@ -21,7 +21,9 @@ coloredlogs==15.0.1
 comtypes==1.2.0
 dataclasses-json==0.5.14
 decorator==5.1.1
+diskcache==5.6.3
 distro==1.8.0
+docker==7.1.0
 docstring_parser==0.16
 docx==0.2.4
 emoji==2.8.0
@@ -29,6 +31,7 @@ executing==2.0.1
 fastapi==0.99.1
 filelock==3.13.1
 filetype==1.2.0
+FLAML==2.1.2
 Flask==3.0.0
 flatbuffers==23.5.26
 frozenlist==1.4.0
@@ -114,6 +117,7 @@ pure-eval==0.2.2
 pyarrow==16.1.0
 pyasn1==0.6.0
 pyasn1_modules==0.4.0
+pyautogen==0.2.32
 pydantic==1.10.13
 pydantic_core==2.14.5
 pydeck==0.9.1
@@ -123,6 +127,7 @@ PyMuPDFb==1.23.0
 pyparsing==3.1.2
 pypdf==3.16.1
 PyPika==0.48.9
+pysqlite3==0.5.3
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 python-magic==0.4.27
@@ -154,6 +159,7 @@ streamlit-searchbox==0.1.12
 sympy==1.12
 tabulate==0.9.0
 tenacity==8.2.3
+termcolor==2.4.0
 threadpoolctl==3.2.0
 tiktoken==0.7.0
 tokenizers==0.15.0
