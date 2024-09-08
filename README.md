@@ -44,7 +44,7 @@ To run this project, you need to have the following installed:
 
 3. Run the project using Streamlit by executing the following command:
    ```bash
-   streamlit run frontend.py
+   streamlit run app.py
    ```
 ## Usage
 
