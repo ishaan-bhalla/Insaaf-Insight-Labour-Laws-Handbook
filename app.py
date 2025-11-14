@@ -8,17 +8,11 @@ import warnings
 import base64
 
 warnings.filterwarnings("ignore")
-
-# Function to initialize environment variables
-def init():
-    load_dotenv()
-    if os.getenv("OPENAI_API_KEY") is None:
-        raise ValueError("OpenAI API Key not provided. Please provide OPENAI_API_KEY as an environment variable.")
-
+load_dotenv()
 # Function to set up the Streamlit layout
 def setup_layout():
     col1, col2 = st.columns(2)
-    
+
     img = Image.open('bot.png')  # Ensure 'bot.png' exists in your directory
     new_size = (150, 150)  # Specify the new size (width, height)
     resized_img = img.resize(new_size)
@@ -27,17 +21,16 @@ def setup_layout():
 
 # Main function to handle user input and display chat
 def main():
-    init() 
     setup_layout()
-    
+
     # Sidebar content with project description and PDF viewer
     with st.sidebar:
         st.write("""
-        Insaaf Insight is an AI-driven legal assistant designed to help users with their legal queries in Indian courts. 
-        This application leverages advanced AI technologies to provide accurate and contextually relevant answers based on 
+        Insaaf Insight is an AI-driven legal assistant designed to help users with their legal queries in Indian courts.
+        This application leverages advanced AI technologies to provide accurate and contextually relevant answers based on
         the documents related to employee relations and labor laws in India. Feel free to ask your questions!
         """)
-        
+
         # Display the PDF directly in the sidebar
         st.write("### Reference Document")
         pdf_file = 'A Handbook on Employee Relations and Labour Laws in India.pdf'
