@@ -1,13 +1,12 @@
 import os
 from dotenv import load_dotenv
 from langchain_community.document_loaders import PyPDFLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_openai import OpenAIEmbeddings
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores.faiss import FAISS
 from langchain_community.llms import Ollama
 
 load_dotenv()
-os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
 os.environ["LANGCHAIN_API_KEY"] = os.getenv("LANGCHAIN_API_KEY")
 
@@ -20,7 +19,10 @@ text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=20
 final_documents = text_splitter.split_documents(documents)
 
 # Create the FAISS vector store from documents
-vectorDb = FAISS.from_documents(final_documents, OpenAIEmbeddings())
+embeddings = HuggingFaceEmbeddings(
+    model_name = "sentence-transformers/all-MiniLM-L6-v2"
+    )
+vectorDb = FAISS.from_documents(final_documents, embeddings)
 
 # Initialize the LLM (Ollama)
 llm = Ollama(model="llama3")
@@ -57,11 +59,11 @@ def generate_answer(query):
     relevant_passage = get_relevant_passages(query)
     if not relevant_passage:
         return "No relevant text found for the query."
-    
+
     prompt = make_rag_prompt(query, relevant_passage)
-    
+
     # Directly invoke the model with the prompt string
-    response = llm(prompt)  # Call the LLM with the formatted prompt
+    response = llm.invoke(prompt)  # Call the LLM with the formatted prompt
     return response  # Return the generated answer
 
 # Example usage
