@@ -1,21 +1,55 @@
----
+## Insaaf Insight 
+Insaaf Insight is an AI-powered legal assistant built using a Retrieval-Augmented Generation (RAG) technique to answer questions from a pdf named: 
 
-# Insaaf Insight
+📄 “A Handbook on Employee Relations and Labour Laws in India”
 
-Insaaf Insight is an AI-driven platform designed to simplify access to legal information, specifically the Indian Penal Code (IPC). This platform aims to democratize legal knowledge, making it accessible and understandable to everyone, regardless of their legal expertise. The project provides detailed information on various sections of the IPC, including descriptions, punishments, and relevant Q&A pairs.
+It uses:
 
-## Main Features
+- Llama 3 served locally through Ollama.
+- Hugging Face embeddings.
+- FAISS for fast semantic search.
 
-- **Comprehensive IPC Information**: Provides detailed descriptions, punishments, and Q&A for all sections of the Indian Penal Code.
-- **User-Friendly Interface**: An intuitive and interactive interface built with Streamlit for easy access to legal information.
-- **Search Functionality**: Allows users to search for specific IPC sections and get relevant information quickly.
-- **AI-Powered Insights**: Uses AI to provide understandable and accurate legal information.
+This is a project, built using open-source LLM and embedding model easy to understand and scale.
+
+## 🚀 Features
+
+1. ✔️ Retrieval-Augmented Generation (RAG)
+
+- Retrieves relevant sections from the labour law handbook
+
+- Ensures grounded, citation-backed answers
+
+- Reduces hallucinations
+
+2. ✔️ Fully Local & Open-Source
+
+- No external APIs
+
+- Runs entirely on your machine
+
+- Uses Llama 3 + FAISS + HF embeddings
+
+3. ✔️ Very Simple Project Structure
+
+- Great for learning and showcasing RAG fundamentals.
+
+## 🛒 Requirements
+Python 3.11 (REQUIRED)
+
+
 
 ## Project Structure
+```
+├── app.py
+├── main.py
+├── ui/
+├── requirements.txt
+├── README.md
+└── A Handbook on Employee Relations and Labour Laws in India.pdf
+```
+The main files in the project are following:
 
-The project consists of the following main files:
-
-- `frontend.py`: Contains the frontend code to interact with users and display the information.
+- `app.py`: Contains the frontend code to interact with users and display the information.
 - `main.py`: Contains the backend logic to process requests and fetch relevant data.
 - `requirements.txt`: Contains the list of dependencies required to run the project.
 
@@ -23,38 +57,56 @@ The project consists of the following main files:
 
 To run this project, you need to have the following installed:
 
-- Python 3.11
+- Python 3.11: This project is tested and built for Python 3.11. Other versions may cause library conflicts.
 
-## Installation
+## Installation & Setup
+1. Install Ollama inorder to run Llama 3 locally <a href="https://ollama.com/download"><strong>Ollama</strong>
+  
 
-    1. Clone the repository to your local machine.
-    2. Navigate to the project directory.
+2.  Download Llama3 model
+   ```bash
+   Ollama pull llama3
+   ```
 
-## Setup
-
-1. Install the required packages by running the following command:
+3. Clone the Repo
+   ```bash
+   git clone https://github.com/ishaan-bhalla/Insaaf-Insight-Labour-Laws-Handbook.git
+   cd Insaaf-Insight-Labour-Laws-Handbook
+   ```
+   
+4. Create Python virtual environment
+   ```bash
+   python -m venv venv
+   ```
+5. Activate Python environment
+   For Windows
+   ```bash
+   venv\Scripts\activate
+   ```
+   For Mac
+   ```bash
+   source venv/bin/activate
+   ```
+6. Install the required packages
    ```bash
    pip install -r requirements.txt
    ```
+## ▶️ Running the Project
 
-2. Run the project using Streamlit by executing the following command:
+1. Run the main file
    ```bash
-   touch .env
+   python main.py
    ```
 
-3. Run the project using Streamlit by executing the following command:
+2. Run the project using Streamlit
    ```bash
    streamlit run app.py
    ```
-## Usage
 
-In .env file Initialise GOOGLE_API_KEY="your_api_key_here"
-After intialising the api key run the above commands, a local web server will be started, and you can access the Insaaf Insight platform via your web browser.
+## 🎯 Why This Project Exists
 
-## Contact
-
-For any queries or suggestions, please reach out to the project maintainer:
-
-[![Gmail](https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Gmail_Icon.png/50px-Gmail_Icon.png)](mailto:bhallaishaan23@gmail.com) [![LinkedIn](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Linkedin_icon.svg/50px-Linkedin_icon.svg.png)](https://www.linkedin.com/in/bhalla-ishaan)
-
----
+- Learn RAG fundamentals
+- Build a clean legal assistant
+- Use fully local, open-source models
+- Keep everything simple and understandable
+    
