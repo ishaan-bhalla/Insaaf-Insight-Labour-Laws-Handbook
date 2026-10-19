@@ -34,23 +34,14 @@ Both are real outputs (Llama 3, temperature 0), and both match page 14 of the ha
 2. [Run it](#2-run-it)
 3. [Deploying the demo](#3-deploying-the-demo)
 4. [Limitations](#4-limitations)
-5. [Project structure](#5-project-structure)
-6. [Team](#6-team)
-7. [Source document](#7-source-document)
+5. [Team](#5-team)
+6. [Source document](#6-source-document)
 
 ## 1. How it works
 
-```
-Handbook PDF ─► split into 1,000-character chunks (200 overlap) ─► embed (all-MiniLM-L6-v2) ─► FAISS index
-                                                                                                    │
-Question ─► embed ─► retrieve the 3 closest chunks, with their page numbers ─────────────────────────┘
-                                   │
-                                   ▼
-          Llama 3, told to answer only from those passages, cite pages, and say so when the answer isn't there
-                                   │
-                                   ▼
-                         answer + the handbook pages it was based on
-```
+[![Architecture diagram of ishaan-bhalla/insaaf-insight-labour-laws-handbook](https://gitdiagram.com/ishaan-bhalla/insaaf-insight-labour-laws-handbook/diagram.png)](https://gitdiagram.com/ishaan-bhalla/insaaf-insight-labour-laws-handbook?utm_source=readme&utm_medium=picture)
+
+*Architecture diagram (GitDiagram; click to explore it interactively).*
 
 - **Retrieval:** LangChain's `PyPDFLoader` and `RecursiveCharacterTextSplitter`, Hugging Face sentence embeddings, and a FAISS similarity search. The index is built once per process.
 - **Generation:** Llama 3 runs through **Groq** when `GROQ_API_KEY` is set (as on the hosted demo), or through a local **Ollama** server otherwise. Both run at temperature 0.
@@ -95,20 +86,7 @@ GROQ_API_KEY = "gsk_..."
 - **Page citations come from retrieval, not the model.** The listed pages are what was retrieved; the model can still misread them.
 - **Not legal advice.** It's an information tool.
 
-## 5. Project structure
-
-```
-├── app.py          # Streamlit chat UI: question box, answers with source pages, handbook viewer
-├── main.py         # RAG pipeline: load, chunk, embed, retrieve, generate
-├── ui/             # sidebar and style text
-├── requirements.txt
-├── bot.png
-├── A Handbook on Employee Relations and Labour Laws in India.pdf
-├── Insaaf-Insight_Group88_ProjectReport.pdf
-└── Insaaf-Insight_Group88_Project.pptx
-```
-
-## 6. Team
+## 5. Team
 
 B.Tech final-year project (Group 88), Department of CSE & IT, The NorthCap University, supervised by Dr. Nitin Malik (May 2024). Responsibilities as recorded in the project report (Chapter 13):
 
@@ -127,6 +105,6 @@ B.Tech final-year project (Group 88), Department of CSE & IT, The NorthCap Unive
 
 Team: **Ishaan Bhalla**, **Priyanshu Mishra** and **Mukul**. In 2026 Ishaan updated the code so the hosted demo runs on Groq, made tracing optional and added page citations to every answer.
 
-## 7. Source document
+## 6. Source document
 
 The knowledge base is *A Handbook on Labour Laws of India* by **Rajkumar S. Adukia** (B.Com (Hons.), LL.B, AICWA, FCA). All credit for its content belongs to the author; it is included here only so the project runs out of the box.
