@@ -30,19 +30,20 @@ GROQ_URL = "https://api.groq.com/openai/v1"
 
 
 def pick_groq_model(api_key: str) -> str:
-    """Groq renames and retires models, so choose a Llama chat model it currently serves.
-    Prefers small, fast ones; set GROQ_MODEL to pin a specific model instead."""
+    """Groq renames and retires models, so choose a chat model it currently serves.
+    Prefers a Llama model, then the open-weight gpt-oss and Qwen models; set GROQ_MODEL to pin one."""
     import httpx
     ids = [m["id"] for m in httpx.get(f"{GROQ_URL}/models", headers={"Authorization": f"Bearer {api_key}"},
                                       timeout=20).raise_for_status().json()["data"]]
-    llama = [i for i in ids if "llama" in i.lower() and not any(x in i.lower() for x in ("guard", "prompt"))]
-    for pref in ("instant", "8b", "versatile", "70b"):
-        for model in llama:
+    # Skip safety classifiers and speech models: they can't answer questions.
+    chat = [i for i in ids if not any(x in i.lower() for x in ("guard", "whisper", "orpheus", "tts"))]
+    for pref in ("llama", "gpt-oss-20b", "gpt-oss-120b", "qwen"):
+        for model in chat:
             if pref in model.lower():
                 return model
-    if llama:
-        return llama[0]
-    raise RuntimeError(f"No Llama model available on Groq; set GROQ_MODEL to one of: {', '.join(ids)}")
+    if chat:
+        return chat[0]
+    raise RuntimeError(f"No chat model available on Groq; set GROQ_MODEL to one of: {', '.join(ids)}")
 
 
 @lru_cache(maxsize=1)
@@ -61,11 +62,12 @@ def get_llm():
 def make_rag_prompt(query: str, passages: list) -> str:
     context = "\n\n".join(f"[Page {doc.metadata.get('page', 0) + 1}] {doc.page_content}" for doc in passages)
     return (
-        "You are Insaaf Insight, an AI-driven legal assistant that answers questions about Indian labour law "
-        "using passages from 'A Handbook on Labour Laws of India'. Your demeanor is professional and informative.\n"
-        "Answer only from the passages below, and cite the page numbers you used, e.g. (p. 12). "
-        "If the passages don't contain the answer, say so instead of guessing. "
-        "Do not say thank you and do not mention that you are an AI assistant.\n\n"
+        "You are Insaaf Insight, a legal assistant for Indian labour law. Answer the question using only the "
+        "passages below, which come from 'A Handbook on Labour Laws of India'.\n"
+        "- Start with the answer itself, in plain words. Do not open with 'According to the passage' or a page number.\n"
+        "- Put the source at the end of the sentence it supports, e.g. '...48 hours a week (Section 51, p. 14).'\n"
+        "- Keep it short: one to three sentences unless the question needs more.\n"
+        "- If the passages don't contain the answer, say you couldn't find it in the handbook instead of guessing.\n\n"
         f"PASSAGES:\n{context}\n\n"
         f"QUESTION: {query}\n\nANSWER:"
     )
@@ -80,9 +82,12 @@ def generate_answer(query: str) -> tuple[str, list[int]]:
     passages = get_relevant_passages(query)
     if not passages:
         return "No relevant text found for the query.", []
-    response = get_llm().invoke(make_rag_prompt(query, passages))
+    answer = get_llm().invoke(make_rag_prompt(query, passages)).content.strip()
+    # Only list sources when the handbook actually answered the question.
+    if any(phrase in answer.lower() for phrase in ("couldn't find", "couldn\u2019t find", "could not find")):
+        return answer, []
     pages = sorted({doc.metadata.get("page", 0) + 1 for doc in passages})
-    return response.content, pages
+    return answer, pages
 
 
 if __name__ == "__main__":

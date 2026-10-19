@@ -7,7 +7,7 @@
 **A retrieval-augmented (RAG) legal assistant that answers questions about Indian labour law from a 96-page handbook, and shows the pages each answer came from.**
 
 [![Live demo](https://img.shields.io/badge/Live_demo-Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://insaaf-insight.streamlit.app/)
-![Llama](https://img.shields.io/badge/Llama-Groq_or_Ollama-0467DF?style=for-the-badge&logo=meta&logoColor=white)
+![Open-weight LLMs](https://img.shields.io/badge/Open--weight_LLMs-Groq_or_Ollama-0467DF?style=for-the-badge)
 ![LangChain](https://img.shields.io/badge/LangChain-FAISS-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white)
 
 </div>
@@ -16,17 +16,15 @@
 
 > **Q:** What is the maximum number of working hours per week for an adult worker in a factory?
 >
-> **A:** According to the passage on Page 14, a worker cannot be employed for more than 48 hours in a week. (Section 51)
+> **A:** An adult worker in a factory cannot be employed for more than 48 hours in a week (Section 51).
 >
 > *Sources: handbook page 14*
 
-> **Q:** Is a weekly holiday compulsory for factory workers?
+> **Q:** What is the minimum wage in Karnataka in 2026?
 >
-> **A:** According to the passage on Page 14, a weekly holiday is compulsory. If a worker is asked to work on their weekly holiday, they should have a full holiday on one of three days immediately or after the normal day of holiday. [Section 52(1)].
->
-> *Sources: handbook page 14*
+> **A:** I couldn't find the answer in the handbook. The passages provided do not mention the minimum wage in Karnataka in 2026.
 
-Both are real outputs (Llama 3 via Ollama, temperature 0), and both match page 14 of the handbook.
+Real outputs from Llama 3 via Ollama at temperature 0. The first matches page 14 of the handbook. The second shows it declining a question the handbook can't answer, instead of guessing.
 
 ## Contents
 
@@ -44,7 +42,7 @@ Both are real outputs (Llama 3 via Ollama, temperature 0), and both match page 1
 *Architecture diagram (GitDiagram; click to explore it interactively).*
 
 - **Retrieval:** LangChain's `PyPDFLoader` and `RecursiveCharacterTextSplitter`, Hugging Face sentence embeddings, and a FAISS similarity search. The index is built once per process.
-- **Generation:** a Llama model on **Groq** when `GROQ_API_KEY` is set (as on the hosted demo; the app picks one Groq currently serves), or Llama 3 on a local **Ollama** server otherwise. Both run at temperature 0.
+- **Generation:** an open-weight model on **Groq** when `GROQ_API_KEY` is set (as on the hosted demo; the app picks a chat model Groq currently serves, preferring Llama, then gpt-oss), or Llama 3 on a local **Ollama** server otherwise. Both run at temperature 0.
 - **Grounding:** the prompt passes each passage with its page number. The app lists the pages behind every answer, so it can be checked against the handbook.
 
 ## 2. Run it
@@ -68,7 +66,7 @@ python main.py           # answers one example question in the terminal
 streamlit run app.py     # the chat app
 ```
 
-Optional settings: `GROQ_MODEL` (by default the app picks a Llama model Groq currently serves), `OLLAMA_MODEL` (default `llama3`), and `LANGCHAIN_API_KEY` to turn on LangSmith tracing.
+Optional settings: `GROQ_MODEL` (by default the app picks a chat model Groq currently serves), `OLLAMA_MODEL` (default `llama3`), and `LANGCHAIN_API_KEY` to turn on LangSmith tracing.
 
 ## 3. Deploying the demo
 
