@@ -26,14 +26,34 @@ def get_vector_store() -> FAISS:
     return FAISS.from_documents(chunks, embeddings)
 
 
+GROQ_URL = "https://api.groq.com/openai/v1"
+
+
+def pick_groq_model(api_key: str) -> str:
+    """Groq renames and retires models, so choose a Llama chat model it currently serves.
+    Prefers small, fast ones; set GROQ_MODEL to pin a specific model instead."""
+    import httpx
+    ids = [m["id"] for m in httpx.get(f"{GROQ_URL}/models", headers={"Authorization": f"Bearer {api_key}"},
+                                      timeout=20).raise_for_status().json()["data"]]
+    llama = [i for i in ids if "llama" in i.lower() and not any(x in i.lower() for x in ("guard", "prompt"))]
+    for pref in ("instant", "8b", "versatile", "70b"):
+        for model in llama:
+            if pref in model.lower():
+                return model
+    if llama:
+        return llama[0]
+    raise RuntimeError(f"No Llama model available on Groq; set GROQ_MODEL to one of: {', '.join(ids)}")
+
+
 @lru_cache(maxsize=1)
 def get_llm():
-    """Llama 3 via Groq when GROQ_API_KEY is set (hosted demo), otherwise via a local Ollama server."""
+    """Llama via Groq when GROQ_API_KEY is set (hosted demo), otherwise via a local Ollama server."""
     if os.getenv("GROQ_API_KEY"):
         from langchain_openai import ChatOpenAI
+        key = os.getenv("GROQ_API_KEY")
         # Groq exposes an OpenAI-compatible API.
-        return ChatOpenAI(base_url="https://api.groq.com/openai/v1", api_key=os.getenv("GROQ_API_KEY"),
-                          model=os.getenv("GROQ_MODEL", "llama-3.1-8b-instant"), temperature=0)
+        return ChatOpenAI(base_url=GROQ_URL, api_key=key, model=os.getenv("GROQ_MODEL") or pick_groq_model(key),
+                          temperature=0)
     from langchain_ollama import ChatOllama
     return ChatOllama(model=os.getenv("OLLAMA_MODEL", "llama3"), temperature=0)
 

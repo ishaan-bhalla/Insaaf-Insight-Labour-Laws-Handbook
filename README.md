@@ -7,7 +7,7 @@
 **A retrieval-augmented (RAG) legal assistant that answers questions about Indian labour law from a 96-page handbook, and shows the pages each answer came from.**
 
 [![Live demo](https://img.shields.io/badge/Live_demo-Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://insaaf-insight.streamlit.app/)
-![Llama 3](https://img.shields.io/badge/Llama_3-Groq_or_Ollama-0467DF?style=for-the-badge&logo=meta&logoColor=white)
+![Llama](https://img.shields.io/badge/Llama-Groq_or_Ollama-0467DF?style=for-the-badge&logo=meta&logoColor=white)
 ![LangChain](https://img.shields.io/badge/LangChain-FAISS-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white)
 
 </div>
@@ -26,7 +26,7 @@
 >
 > *Sources: handbook page 14*
 
-Both are real outputs (Llama 3, temperature 0), and both match page 14 of the handbook.
+Both are real outputs (Llama 3 via Ollama, temperature 0), and both match page 14 of the handbook.
 
 ## Contents
 
@@ -44,7 +44,7 @@ Both are real outputs (Llama 3, temperature 0), and both match page 14 of the ha
 *Architecture diagram (GitDiagram; click to explore it interactively).*
 
 - **Retrieval:** LangChain's `PyPDFLoader` and `RecursiveCharacterTextSplitter`, Hugging Face sentence embeddings, and a FAISS similarity search. The index is built once per process.
-- **Generation:** Llama 3 runs through **Groq** when `GROQ_API_KEY` is set (as on the hosted demo), or through a local **Ollama** server otherwise. Both run at temperature 0.
+- **Generation:** a Llama model on **Groq** when `GROQ_API_KEY` is set (as on the hosted demo; the app picks one Groq currently serves), or Llama 3 on a local **Ollama** server otherwise. Both run at temperature 0.
 - **Grounding:** the prompt passes each passage with its page number. The app lists the pages behind every answer, so it can be checked against the handbook.
 
 ## 2. Run it
@@ -68,7 +68,7 @@ python main.py           # answers one example question in the terminal
 streamlit run app.py     # the chat app
 ```
 
-Optional settings: `GROQ_MODEL` (default `llama-3.1-8b-instant`), `OLLAMA_MODEL` (default `llama3`), and `LANGCHAIN_API_KEY` to turn on LangSmith tracing.
+Optional settings: `GROQ_MODEL` (by default the app picks a Llama model Groq currently serves), `OLLAMA_MODEL` (default `llama3`), and `LANGCHAIN_API_KEY` to turn on LangSmith tracing.
 
 ## 3. Deploying the demo
 
