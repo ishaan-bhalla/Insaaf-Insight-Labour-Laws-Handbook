@@ -1,112 +1,132 @@
-## Insaaf Insight 
-Insaaf Insight is an AI-powered legal assistant built using a Retrieval-Augmented Generation (RAG) technique to answer questions from a pdf named: 
+<div align="center">
 
-📄 “A Handbook on Employee Relations and Labour Laws in India”
+<img src="bot.png" alt="Insaaf Insight logo" width="120">
 
-It uses:
+# Insaaf Insight
 
-- Llama 3 served locally through Ollama.
-- Hugging Face embeddings.
-- FAISS for fast semantic search.
+**A retrieval-augmented (RAG) legal assistant that answers questions about Indian labour law from a 96-page handbook, and shows the pages each answer came from.**
 
-This is a project, built using open-source LLM and embedding model easy to understand and scale.
+[![Live demo](https://img.shields.io/badge/Live_demo-Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://insaaf-insight.streamlit.app/)
+![Llama 3](https://img.shields.io/badge/Llama_3-Groq_or_Ollama-0467DF?style=for-the-badge&logo=meta&logoColor=white)
+![LangChain](https://img.shields.io/badge/LangChain-FAISS-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white)
 
-## 🚀 Features
+</div>
 
-1. ✔️ Retrieval-Augmented Generation (RAG)
+## Example
 
-- Retrieves relevant sections from the labour law handbook
+> **Q:** What is the maximum number of working hours per week for an adult worker in a factory?
+>
+> **A:** According to the passage on Page 14, a worker cannot be employed for more than 48 hours in a week. (Section 51)
+>
+> *Sources: handbook page 14*
 
-- Ensures grounded, citation-backed answers
+> **Q:** Is a weekly holiday compulsory for factory workers?
+>
+> **A:** According to the passage on Page 14, a weekly holiday is compulsory. If a worker is asked to work on their weekly holiday, they should have a full holiday on one of three days immediately or after the normal day of holiday. [Section 52(1)].
+>
+> *Sources: handbook page 14*
 
-- Reduces hallucinations
+Both are real outputs (Llama 3, temperature 0), and both match page 14 of the handbook.
 
-2. ✔️ Fully Local & Open-Source
+## Contents
 
-- No external APIs
+1. [How it works](#1-how-it-works)
+2. [Run it](#2-run-it)
+3. [Deploying the demo](#3-deploying-the-demo)
+4. [Limitations](#4-limitations)
+5. [Project structure](#5-project-structure)
+6. [Team](#6-team)
+7. [Source document](#7-source-document)
 
-- Runs entirely on your machine
+## 1. How it works
 
-- Uses Llama 3 + FAISS + HF embeddings
-
-3. ✔️ Very Simple Project Structure
-
-- Great for learning and showcasing RAG fundamentals.
-
-## 🛒 Requirements
-Python 3.11 (REQUIRED)
-
-
-
-## Project Structure
 ```
-├── app.py
-├── main.py
-├── ui/
+Handbook PDF ─► split into 1,000-character chunks (200 overlap) ─► embed (all-MiniLM-L6-v2) ─► FAISS index
+                                                                                                    │
+Question ─► embed ─► retrieve the 3 closest chunks, with their page numbers ─────────────────────────┘
+                                   │
+                                   ▼
+          Llama 3, told to answer only from those passages, cite pages, and say so when the answer isn't there
+                                   │
+                                   ▼
+                         answer + the handbook pages it was based on
+```
+
+- **Retrieval:** LangChain's `PyPDFLoader` and `RecursiveCharacterTextSplitter`, Hugging Face sentence embeddings, and a FAISS similarity search. The index is built once per process.
+- **Generation:** Llama 3 runs through **Groq** when `GROQ_API_KEY` is set (as on the hosted demo), or through a local **Ollama** server otherwise. Both run at temperature 0.
+- **Grounding:** the prompt passes each passage with its page number. The app lists the pages behind every answer, so it can be checked against the handbook.
+
+## 2. Run it
+
+Tested with Python 3.12.
+
+```bash
+git clone https://github.com/ishaan-bhalla/Insaaf-Insight-Labour-Laws-Handbook.git
+cd Insaaf-Insight-Labour-Laws-Handbook
+python -m venv venv && source venv/bin/activate      # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+Then pick a model:
+
+- **Fully local (free, no API keys):** install [Ollama](https://ollama.com/download) and run `ollama pull llama3`.
+- **Hosted Llama 3 (free tier):** create a key at [console.groq.com](https://console.groq.com) and put `GROQ_API_KEY=...` in a `.env` file.
+
+```bash
+python main.py           # answers one example question in the terminal
+streamlit run app.py     # the chat app
+```
+
+Optional settings: `GROQ_MODEL` (default `llama-3.1-8b-instant`), `OLLAMA_MODEL` (default `llama3`), and `LANGCHAIN_API_KEY` to turn on LangSmith tracing.
+
+## 3. Deploying the demo
+
+Streamlit Community Cloud can't run Ollama, so the hosted app uses Groq. In the app's **Settings → Secrets**, add:
+
+```toml
+GROQ_API_KEY = "gsk_..."
+```
+
+## 4. Limitations
+
+- **One document.** It only knows this handbook, which predates India's 2019-2020 labour codes (the file dates from 2014, and the latest year it mentions is 2006). It can't speak to later law, other statutes or case law.
+- **No accuracy benchmark.** Answers have been spot-checked against the handbook, not scored on a labelled question set.
+- **Retrieval can miss.** Only the 3 most similar chunks are used. A question phrased differently from the handbook may retrieve the wrong passages, and the answer is only as good as those passages.
+- **Page citations come from retrieval, not the model.** The listed pages are what was retrieved; the model can still misread them.
+- **Not legal advice.** It's an information tool.
+
+## 5. Project structure
+
+```
+├── app.py          # Streamlit chat UI: question box, answers with source pages, handbook viewer
+├── main.py         # RAG pipeline: load, chunk, embed, retrieve, generate
+├── ui/             # sidebar and style text
 ├── requirements.txt
-├── README.md
-└── A Handbook on Employee Relations and Labour Laws in India.pdf
+├── bot.png
+├── A Handbook on Employee Relations and Labour Laws in India.pdf
+├── Insaaf-Insight_Group88_ProjectReport.pdf
+└── Insaaf-Insight_Group88_Project.pptx
 ```
-The main files in the project are following:
 
-- `app.py`: Contains the frontend code to interact with users and display the information.
-- `main.py`: Contains the backend logic to process requests and fetch relevant data.
-- `requirements.txt`: Contains the list of dependencies required to run the project.
+## 6. Team
 
-## Prerequisites
+B.Tech final-year project (Group 88), Department of CSE & IT, The NorthCap University, supervised by Dr. Nitin Malik (May 2024). Responsibilities as recorded in the project report (Chapter 13):
 
-To run this project, you need to have the following installed:
+| Task | Responsible |
+|---|---|
+| Project planning and research | Ishaan, Priyanshu & Mukul |
+| Environment setup | Priyanshu |
+| Data collection and preprocessing | Ishaan & Mukul |
+| Model selection and training | Priyanshu & Ishaan |
+| Model evaluation and optimisation | Ishaan & Mukul |
+| UI development | Mukul |
+| Front end | Mukul & Ishaan |
+| Back end | Priyanshu |
+| Testing | Mukul |
+| Documentation | Ishaan |
 
-- Python 3.11: This project is tested and built for Python 3.11. Other versions may cause library conflicts.
+Team: **Ishaan Bhalla**, **Priyanshu Mishra** and **Mukul**. In 2026 Ishaan updated the code so the hosted demo runs on Groq, made tracing optional and added page citations to every answer.
 
-## Installation & Setup
-1. Install Ollama inorder to run Llama 3 locally <a href="https://ollama.com/download"><strong>Ollama</strong>
-  
+## 7. Source document
 
-2.  Download Llama3 model
-   ```bash
-   Ollama pull llama3
-   ```
-
-3. Clone the Repo
-   ```bash
-   git clone https://github.com/ishaan-bhalla/Insaaf-Insight-Labour-Laws-Handbook.git
-   cd Insaaf-Insight-Labour-Laws-Handbook
-   ```
-   
-4. Create Python virtual environment
-   ```bash
-   python -m venv venv
-   ```
-5. Activate Python environment
-   For Windows
-   ```bash
-   venv\Scripts\activate
-   ```
-   For Mac
-   ```bash
-   source venv/bin/activate
-   ```
-6. Install the required packages
-   ```bash
-   pip install -r requirements.txt
-   ```
-## ▶️ Running the Project
-
-1. Run the main file
-   ```bash
-   python main.py
-   ```
-
-2. Run the project using Streamlit
-   ```bash
-   streamlit run app.py
-   ```
-
-## 🎯 Why This Project Exists
-
-- Learn RAG fundamentals
-- Build a clean legal assistant
-- Use fully local, open-source models
-- Keep everything simple and understandable
-    
+The knowledge base is *A Handbook on Labour Laws of India* by **Rajkumar S. Adukia** (B.Com (Hons.), LL.B, AICWA, FCA). All credit for its content belongs to the author; it is included here only so the project runs out of the box.

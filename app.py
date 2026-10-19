@@ -45,18 +45,17 @@ def main():
         st.session_state.messages.append({"role": "user", "content": user_input})
         with st.spinner("Generating..."):
             try:
-                response = generate_answer(user_input)  # Call your answer generation function
-                st.session_state.messages.append({"role": "assistant", "content": response})
+                answer, pages = generate_answer(user_input)
+                if pages:
+                    answer += "\n\nSources: handbook page" + ("s " if len(pages) > 1 else " ") + ", ".join(map(str, pages))
+                st.session_state.messages.append({"role": "assistant", "content": answer})
             except Exception as e:
                 st.session_state.messages.append({"role": "assistant", "content": f"An error occurred: {e}"})
                 st.error(f"An error occurred: {e}")
 
     # Display messages in the chat
-    for msg in st.session_state.messages:
-        if msg["role"] == "user":
-            message(msg["content"], is_user=True)
-        else:
-            message(msg["content"], is_user=False)
+    for i, msg in enumerate(st.session_state.messages):
+        message(msg["content"], is_user=msg["role"] == "user", key=f"msg_{i}")
 
 if __name__ == '__main__':
     main()
