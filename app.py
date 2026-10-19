@@ -5,7 +5,6 @@ from streamlit_chat import message  # Make sure you have this library installed
 from main import generate_answer  # Import the function from your main script
 import os
 import warnings
-import base64
 
 warnings.filterwarnings("ignore")
 load_dotenv()
@@ -34,7 +33,11 @@ def main():
         # Display the PDF directly in the sidebar
         st.write("### Reference Document")
         pdf_file = 'A Handbook on Employee Relations and Labour Laws in India.pdf'
-        st.markdown(f'<iframe src="data:application/pdf;base64,{base64.b64encode(open(pdf_file, "rb").read()).decode()}" width="100%" height="400px"></iframe>', unsafe_allow_html=True)
+        # Browsers block PDFs embedded as data: URLs, so offer the file as a download instead.
+        st.caption("A Handbook on Labour Laws of India, by Rajkumar S. Adukia (96 pages). "
+                   "Every answer lists the pages it was drawn from.")
+        with open(pdf_file, "rb") as f:
+            st.download_button("Download the handbook (PDF)", f.read(), file_name=pdf_file, mime="application/pdf")
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
