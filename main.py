@@ -1,4 +1,5 @@
 import os
+import time
 from functools import lru_cache
 
 from dotenv import load_dotenv
@@ -29,32 +30,39 @@ def get_vector_store() -> FAISS:
 GROQ_URL = "https://api.groq.com/openai/v1"
 
 
-def pick_groq_model(api_key: str) -> str:
-    """Groq renames and retires models, so choose a chat model it currently serves.
-    Prefers a Llama model, then the open-weight gpt-oss and Qwen models; set GROQ_MODEL to pin one."""
+def pick_groq_models(api_key: str) -> list[str]:
+    """Groq renames and retires models, so choose chat models it currently serves, best first.
+    Prefers a Llama model, then the open-weight gpt-oss and Qwen models; set GROQ_MODEL to pin the first."""
     import httpx
     ids = [m["id"] for m in httpx.get(f"{GROQ_URL}/models", headers={"Authorization": f"Bearer {api_key}"},
                                       timeout=20).raise_for_status().json()["data"]]
     # Skip safety classifiers and speech models: they can't answer questions.
     chat = [i for i in ids if not any(x in i.lower() for x in ("guard", "whisper", "orpheus", "tts"))]
+    if not chat:
+        raise RuntimeError(f"No chat model available on Groq; set GROQ_MODEL to one of: {', '.join(ids)}")
+    ranked = []
     for pref in ("llama", "gpt-oss-20b", "gpt-oss-120b", "qwen"):
-        for model in chat:
-            if pref in model.lower():
-                return model
-    if chat:
-        return chat[0]
-    raise RuntimeError(f"No chat model available on Groq; set GROQ_MODEL to one of: {', '.join(ids)}")
+        ranked += [m for m in chat if pref in m.lower() and m not in ranked]
+    return ranked + [m for m in chat if m not in ranked]
 
 
 @lru_cache(maxsize=1)
 def get_llm():
-    """Llama via Groq when GROQ_API_KEY is set (hosted demo), otherwise via a local Ollama server."""
+    """Llama via Groq when GROQ_API_KEY is set (hosted demo), otherwise via a local Ollama server.
+    On Groq, a second model takes over if the first errors or is rate-limited after retries."""
     if os.getenv("GROQ_API_KEY"):
         from langchain_openai import ChatOpenAI
         key = os.getenv("GROQ_API_KEY")
-        # Groq exposes an OpenAI-compatible API.
-        return ChatOpenAI(base_url=GROQ_URL, api_key=key, model=os.getenv("GROQ_MODEL") or pick_groq_model(key),
-                          temperature=0)
+        models = pick_groq_models(key)
+        if os.getenv("GROQ_MODEL"):
+            models = [os.getenv("GROQ_MODEL")] + [m for m in models if m != os.getenv("GROQ_MODEL")]
+
+        def groq(model):
+            # Groq exposes an OpenAI-compatible API.
+            return ChatOpenAI(base_url=GROQ_URL, api_key=key, model=model, temperature=0, timeout=60, max_retries=3)
+
+        primary = groq(models[0])
+        return primary.with_fallbacks([groq(models[1])]) if len(models) > 1 else primary
     from langchain_ollama import ChatOllama
     return ChatOllama(model=os.getenv("OLLAMA_MODEL", "llama3"), temperature=0)
 
@@ -77,17 +85,34 @@ def get_relevant_passages(query: str, k: int = TOP_K) -> list:
     return get_vector_store().similarity_search(query, k=k)
 
 
+def answer_with_stats(query: str) -> dict:
+    """Answer a question and report the pages used, retrieval and LLM time, and token counts."""
+    started = time.perf_counter()
+    passages = get_relevant_passages(query)
+    retrieval_ms = (time.perf_counter() - started) * 1000
+    retrieved_pages = sorted({doc.metadata.get("page", 0) + 1 for doc in passages})
+    stats = {"retrieved_pages": retrieved_pages, "retrieval_ms": round(retrieval_ms),
+             "llm_ms": None, "input_tokens": None, "output_tokens": None, "model": None}
+    if not passages:
+        return {"answer": "No relevant text found for the query.", "pages": [], "found": False, **stats}
+
+    started = time.perf_counter()
+    reply = get_llm().invoke(make_rag_prompt(query, passages))
+    stats["llm_ms"] = round((time.perf_counter() - started) * 1000)
+    usage = getattr(reply, "usage_metadata", None) or {}
+    stats.update(input_tokens=usage.get("input_tokens"), output_tokens=usage.get("output_tokens"),
+                 model=reply.response_metadata.get("model_name") or reply.response_metadata.get("model"))
+
+    answer = reply.content.strip()
+    # Only list sources when the handbook actually answered the question.
+    found = not any(phrase in answer.lower() for phrase in ("couldn't find", "couldn\u2019t find", "could not find"))
+    return {"answer": answer, "pages": retrieved_pages if found else [], "found": found, **stats}
+
+
 def generate_answer(query: str) -> tuple[str, list[int]]:
     """Return the answer and the handbook pages it was based on."""
-    passages = get_relevant_passages(query)
-    if not passages:
-        return "No relevant text found for the query.", []
-    answer = get_llm().invoke(make_rag_prompt(query, passages)).content.strip()
-    # Only list sources when the handbook actually answered the question.
-    if any(phrase in answer.lower() for phrase in ("couldn't find", "couldn\u2019t find", "could not find")):
-        return answer, []
-    pages = sorted({doc.metadata.get("page", 0) + 1 for doc in passages})
-    return answer, pages
+    result = answer_with_stats(query)
+    return result["answer"], result["pages"]
 
 
 if __name__ == "__main__":

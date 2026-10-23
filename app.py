@@ -53,8 +53,11 @@ def main():
                     answer += "\n\nSources: handbook page" + ("s " if len(pages) > 1 else " ") + ", ".join(map(str, pages))
                 st.session_state.messages.append({"role": "assistant", "content": answer})
             except Exception as e:
-                st.session_state.messages.append({"role": "assistant", "content": f"An error occurred: {e}"})
-                st.error(f"An error occurred: {e}")
+                # Both models already failed (after retries), so say so plainly and keep the detail for the log.
+                print(f"Answer failed: {e!r}")
+                busy = "The language model is busy or unavailable right now. Please try again in a minute."
+                st.session_state.messages.append({"role": "assistant", "content": busy})
+                st.error(busy)
 
     # Display messages in the chat
     for i, msg in enumerate(st.session_state.messages):

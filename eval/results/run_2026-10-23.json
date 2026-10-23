@@ -1,0 +1,566 @@
+{
+  "summary": {
+    "date": "2026-10-23",
+    "model": "openai/gpt-oss-20b",
+    "top_k": 3,
+    "questions": 30,
+    "errors": 0,
+    "retrieval_hit_at_k": "21/24",
+    "answer_accuracy": "19/24",
+    "accuracy_when_retrieval_hit": "18/21",
+    "false_refusals": "3/24",
+    "out_of_scope_declined": "6/6",
+    "answers_citing_unretrieved_pages": "0/24",
+    "llm_ms_p50": 6692,
+    "llm_ms_p95": 10749,
+    "retrieval_ms_p50": 55,
+    "avg_input_tokens": 816,
+    "avg_output_tokens": 172,
+    "note": "Regraded after normalising narrow no-break spaces and hyphens in answers; answers unchanged."
+  },
+  "rows": [
+    {
+      "id": "q01",
+      "type": "fact",
+      "answer": "Labour is a concurrent subject under the Indian Constitution, meaning both the central and state governments can legislate on it (Page\u202f6).",
+      "found": true,
+      "retrieved_pages": [
+        2,
+        6,
+        9
+      ],
+      "llm_ms": 1671,
+      "retrieval_ms": 349,
+      "input_tokens": 827,
+      "output_tokens": 198,
+      "model": "openai/gpt-oss-20b",
+      "retrieval_hit": true,
+      "correct": true,
+      "cites_unretrieved_page": false
+    },
+    {
+      "id": "q02",
+      "type": "fact",
+      "answer": "Article\u202f24 of the Constitution prohibits employing children in factories. (Article\u202f24)",
+      "found": true,
+      "retrieved_pages": [
+        10,
+        26,
+        27
+      ],
+      "llm_ms": 613,
+      "retrieval_ms": 45,
+      "input_tokens": 756,
+      "output_tokens": 99,
+      "model": "openai/gpt-oss-20b",
+      "retrieval_hit": true,
+      "correct": true,
+      "cites_unretrieved_page": false
+    },
+    {
+      "id": "q03",
+      "type": "fact",
+      "answer": "The policy provides a special conciliation mechanism for projects with investments of Rs.150\u202fcrores or more. (Page\u202f12)",
+      "found": true,
+      "retrieved_pages": [
+        11,
+        12,
+        46
+      ],
+      "llm_ms": 611,
+      "retrieval_ms": 69,
+      "input_tokens": 825,
+      "output_tokens": 129,
+      "model": "openai/gpt-oss-20b",
+      "retrieval_hit": true,
+      "correct": true,
+      "cites_unretrieved_page": false
+    },
+    {
+      "id": "q04",
+      "type": "fact",
+      "answer": "A factory that uses power must employ at least 10 workers for the Factories Act to apply. [Page\u202f55]",
+      "found": true,
+      "retrieved_pages": [
+        55,
+        80,
+        86
+      ],
+      "llm_ms": 971,
+      "retrieval_ms": 73,
+      "input_tokens": 807,
+      "output_tokens": 348,
+      "model": "openai/gpt-oss-20b",
+      "retrieval_hit": false,
+      "correct": true,
+      "cites_unretrieved_page": false
+    },
+    {
+      "id": "q05",
+      "type": "fact",
+      "answer": "A factory worker may not be required to work more than 60 hours in a week, including overtime. (Section\u202f59(1) and Section\u202f56, p.\u202f14)",
+      "found": true,
+      "retrieved_pages": [
+        14
+      ],
+      "llm_ms": 1115,
+      "retrieval_ms": 18,
+      "input_tokens": 943,
+      "output_tokens": 544,
+      "model": "openai/gpt-oss-20b",
+      "retrieval_hit": true,
+      "correct": false,
+      "cites_unretrieved_page": false
+    },
+    {
+      "id": "q06",
+      "type": "fact",
+      "answer": "A factory worker must have worked at least 240 days in the previous calendar year to qualify for annual leave with wages. (Section\u202f79)",
+      "found": true,
+      "retrieved_pages": [
+        14,
+        15,
+        74
+      ],
+      "llm_ms": 614,
+      "retrieval_ms": 88,
+      "input_tokens": 945,
+      "output_tokens": 131,
+      "model": "openai/gpt-oss-20b",
+      "retrieval_hit": true,
+      "correct": true,
+      "cites_unretrieved_page": false
+    },
+    {
+      "id": "q07",
+      "type": "fact",
+      "answer": "The maximum fine for employing a child in a banned occupation under the Child Labour (Prohibition & Regulation) Act, 1986 is Rs\u202f20,000 (Section\u202f14).",
+      "found": true,
+      "retrieved_pages": [
+        27,
+        28
+      ],
+      "llm_ms": 677,
+      "retrieval_ms": 24,
+      "input_tokens": 851,
+      "output_tokens": 190,
+      "model": "openai/gpt-oss-20b",
+      "retrieval_hit": true,
+      "correct": true,
+      "cites_unretrieved_page": false
+    },
+    {
+      "id": "q08",
+      "type": "fact",
+      "answer": "A freed bonded labourer is entitled to a rehabilitation grant of Rs.\u202f120,000. (Section 2(g), p.\u202f32)",
+      "found": true,
+      "retrieved_pages": [
+        31,
+        32
+      ],
+      "llm_ms": 636,
+      "retrieval_ms": 342,
+      "input_tokens": 904,
+      "output_tokens": 105,
+      "model": "openai/gpt-oss-20b",
+      "retrieval_hit": true,
+      "correct": true,
+      "cites_unretrieved_page": false
+    },
+    {
+      "id": "q09",
+      "type": "fact",
+      "answer": "I couldn\u2019t find that information in the handbook.",
+      "found": false,
+      "retrieved_pages": [
+        33,
+        34
+      ],
+      "llm_ms": 6717,
+      "retrieval_ms": 23,
+      "input_tokens": 748,
+      "output_tokens": 118,
+      "model": "openai/gpt-oss-20b",
+      "retrieval_hit": true,
+      "correct": false,
+      "cites_unretrieved_page": false
+    },
+    {
+      "id": "q10",
+      "type": "fact",
+      "answer": "An apprentice is entitled to 12 days of casual leave each year. (Page\u202f38)",
+      "found": true,
+      "retrieved_pages": [
+        37,
+        38,
+        41
+      ],
+      "llm_ms": 6743,
+      "retrieval_ms": 166,
+      "input_tokens": 853,
+      "output_tokens": 126,
+      "model": "openai/gpt-oss-20b",
+      "retrieval_hit": true,
+      "correct": true,
+      "cites_unretrieved_page": false
+    },
+    {
+      "id": "q11",
+      "type": "fact",
+      "answer": "An establishment must employ at least 20 persons to be covered by the EPF Act. (Section\u202f1(3), p.\u202f44)",
+      "found": true,
+      "retrieved_pages": [
+        44,
+        45
+      ],
+      "llm_ms": 6796,
+      "retrieval_ms": 48,
+      "input_tokens": 807,
+      "output_tokens": 176,
+      "model": "openai/gpt-oss-20b",
+      "retrieval_hit": true,
+      "correct": true,
+      "cites_unretrieved_page": false
+    },
+    {
+      "id": "q12",
+      "type": "fact",
+      "answer": "Employer contributes 10\u202f% of basic wages plus dearness allowance, while the employee contributes 10\u202f% of salary (of which 8.33\u202f% is diverted to the pension scheme and the remainder credited to the Provident Fund). (Section\u202f6, p.\u202f47; 10\u202f% scheme details, p.\u202f49)",
+      "found": true,
+      "retrieved_pages": [
+        47,
+        49,
+        51
+      ],
+      "llm_ms": 7178,
+      "retrieval_ms": 95,
+      "input_tokens": 821,
+      "output_tokens": 522,
+      "model": "openai/gpt-oss-20b",
+      "retrieval_hit": true,
+      "correct": false,
+      "cites_unretrieved_page": false
+    },
+    {
+      "id": "q13",
+      "type": "fact",
+      "answer": "A member may commute one\u2011third (33.33\u202f%) of the pension. (Page\u202f50)",
+      "found": true,
+      "retrieved_pages": [
+        44,
+        49,
+        50
+      ],
+      "llm_ms": 8819,
+      "retrieval_ms": 59,
+      "input_tokens": 907,
+      "output_tokens": 157,
+      "model": "openai/gpt-oss-20b",
+      "retrieval_hit": true,
+      "correct": true,
+      "cites_unretrieved_page": false
+    },
+    {
+      "id": "q14",
+      "type": "fact",
+      "answer": "By 30\u202fApril every year. (Form\u20113A must be submitted to the Provident Fund office by 30th April each year.)",
+      "found": true,
+      "retrieved_pages": [
+        52,
+        53
+      ],
+      "llm_ms": 10749,
+      "retrieval_ms": 53,
+      "input_tokens": 840,
+      "output_tokens": 127,
+      "model": "openai/gpt-oss-20b",
+      "retrieval_hit": true,
+      "correct": true,
+      "cites_unretrieved_page": false
+    },
+    {
+      "id": "q15",
+      "type": "fact",
+      "answer": "Employees are covered under the ESI Act if their monthly wages do not exceed Rs.\u202f7,500 (Section\u202f2(9), p.\u202f55).",
+      "found": true,
+      "retrieved_pages": [
+        55,
+        56,
+        57
+      ],
+      "llm_ms": 6748,
+      "retrieval_ms": 56,
+      "input_tokens": 780,
+      "output_tokens": 151,
+      "model": "openai/gpt-oss-20b",
+      "retrieval_hit": true,
+      "correct": true,
+      "cites_unretrieved_page": false
+    },
+    {
+      "id": "q16",
+      "type": "fact",
+      "answer": "The employer\u2019s ESI contribution rate is 4.75% of the total wage bill of all employees for each wage period. (Section\u202f39(1),\u202f56)",
+      "found": true,
+      "retrieved_pages": [
+        55,
+        56,
+        57
+      ],
+      "llm_ms": 6692,
+      "retrieval_ms": 91,
+      "input_tokens": 769,
+      "output_tokens": 105,
+      "model": "openai/gpt-oss-20b",
+      "retrieval_hit": true,
+      "correct": true,
+      "cites_unretrieved_page": false
+    },
+    {
+      "id": "q17",
+      "type": "fact",
+      "answer": "Gratuity is paid at 15 days\u2019 wages for each year of completed service. [Section\u202f4(1)]",
+      "found": true,
+      "retrieved_pages": [
+        58,
+        59
+      ],
+      "llm_ms": 6908,
+      "retrieval_ms": 53,
+      "input_tokens": 824,
+      "output_tokens": 221,
+      "model": "openai/gpt-oss-20b",
+      "retrieval_hit": true,
+      "correct": true,
+      "cites_unretrieved_page": false
+    },
+    {
+      "id": "q18",
+      "type": "fact",
+      "answer": "The bonus must be paid within eight months from the close of the accounting year, unless the employer obtains an extension from the appropriate authority, in which case the total period may not exceed two years. (Section\u202f19)",
+      "found": true,
+      "retrieved_pages": [
+        69,
+        71
+      ],
+      "llm_ms": 4521,
+      "retrieval_ms": 95,
+      "input_tokens": 855,
+      "output_tokens": 139,
+      "model": "openai/gpt-oss-20b",
+      "retrieval_hit": true,
+      "correct": true,
+      "cites_unretrieved_page": false
+    },
+    {
+      "id": "q19",
+      "type": "fact",
+      "answer": "Wages must be paid on or before the 7th day after the wage period ends; if the employer has more than 1,000 workers, the deadline is the 10th day after the wage period. (Page\u202f74)",
+      "found": true,
+      "retrieved_pages": [
+        74,
+        81
+      ],
+      "llm_ms": 10928,
+      "retrieval_ms": 50,
+      "input_tokens": 839,
+      "output_tokens": 304,
+      "model": "openai/gpt-oss-20b",
+      "retrieval_hit": true,
+      "correct": true,
+      "cites_unretrieved_page": false
+    },
+    {
+      "id": "q20",
+      "type": "fact",
+      "answer": "I couldn\u2019t find that information in the handbook.",
+      "found": false,
+      "retrieved_pages": [
+        73,
+        81
+      ],
+      "llm_ms": 7922,
+      "retrieval_ms": 48,
+      "input_tokens": 725,
+      "output_tokens": 281,
+      "model": "openai/gpt-oss-20b",
+      "retrieval_hit": false,
+      "correct": false,
+      "cites_unretrieved_page": false
+    },
+    {
+      "id": "q21",
+      "type": "fact",
+      "answer": "I couldn\u2019t find that information in the handbook.",
+      "found": false,
+      "retrieved_pages": [
+        13,
+        44
+      ],
+      "llm_ms": 7698,
+      "retrieval_ms": 52,
+      "input_tokens": 855,
+      "output_tokens": 101,
+      "model": "openai/gpt-oss-20b",
+      "retrieval_hit": false,
+      "correct": false,
+      "cites_unretrieved_page": false
+    },
+    {
+      "id": "q22",
+      "type": "fact",
+      "answer": "The powers of the Labour Commissioner are exercised by the designated Development Commissioner or another authority appointed for the SEZ area. (Page\u202f86)",
+      "found": true,
+      "retrieved_pages": [
+        86,
+        87
+      ],
+      "llm_ms": 6617,
+      "retrieval_ms": 55,
+      "input_tokens": 719,
+      "output_tokens": 103,
+      "model": "openai/gpt-oss-20b",
+      "retrieval_hit": true,
+      "correct": true,
+      "cites_unretrieved_page": false
+    },
+    {
+      "id": "q23",
+      "type": "fact",
+      "answer": "A worker first files the petition before the Labour Conciliation Officer. (Page\u202f88)",
+      "found": true,
+      "retrieved_pages": [
+        4,
+        88,
+        96
+      ],
+      "llm_ms": 4624,
+      "retrieval_ms": 51,
+      "input_tokens": 528,
+      "output_tokens": 86,
+      "model": "openai/gpt-oss-20b",
+      "retrieval_hit": true,
+      "correct": true,
+      "cites_unretrieved_page": false
+    },
+    {
+      "id": "q24",
+      "type": "fact",
+      "answer": "No, there is no court fee payable on petitions filed before Labour Courts and Industrial Tribunals. (Page\u202f89)",
+      "found": true,
+      "retrieved_pages": [
+        89,
+        90
+      ],
+      "llm_ms": 4652,
+      "retrieval_ms": 53,
+      "input_tokens": 837,
+      "output_tokens": 137,
+      "model": "openai/gpt-oss-20b",
+      "retrieval_hit": true,
+      "correct": true,
+      "cites_unretrieved_page": false
+    },
+    {
+      "id": "o01",
+      "type": "out_of_scope",
+      "answer": "I couldn't find that information in the handbook.",
+      "found": false,
+      "retrieved_pages": [
+        56,
+        68,
+        73
+      ],
+      "llm_ms": 9997,
+      "retrieval_ms": 49,
+      "input_tokens": 862,
+      "output_tokens": 84,
+      "model": "openai/gpt-oss-20b",
+      "correct": true
+    },
+    {
+      "id": "o02",
+      "type": "out_of_scope",
+      "answer": "I couldn\u2019t find that information in the handbook.",
+      "found": false,
+      "retrieved_pages": [
+        2,
+        81,
+        84
+      ],
+      "llm_ms": 4612,
+      "retrieval_ms": 58,
+      "input_tokens": 633,
+      "output_tokens": 69,
+      "model": "openai/gpt-oss-20b",
+      "correct": true
+    },
+    {
+      "id": "o03",
+      "type": "out_of_scope",
+      "answer": "I couldn\u2019t find the income tax slab rates for FY\u202f2024\u201125 in the handbook.",
+      "found": false,
+      "retrieved_pages": [
+        40,
+        52,
+        59
+      ],
+      "llm_ms": 7812,
+      "retrieval_ms": 51,
+      "input_tokens": 999,
+      "output_tokens": 94,
+      "model": "openai/gpt-oss-20b",
+      "correct": true
+    },
+    {
+      "id": "o04",
+      "type": "out_of_scope",
+      "answer": "I couldn\u2019t find that information in the handbook.",
+      "found": false,
+      "retrieved_pages": [
+        71,
+        88,
+        90
+      ],
+      "llm_ms": 6596,
+      "retrieval_ms": 79,
+      "input_tokens": 744,
+      "output_tokens": 80,
+      "model": "openai/gpt-oss-20b",
+      "correct": true
+    },
+    {
+      "id": "o05",
+      "type": "out_of_scope",
+      "answer": "I couldn\u2019t find any mention of paternity leave in the handbook.",
+      "found": false,
+      "retrieved_pages": [
+        15,
+        38
+      ],
+      "llm_ms": 7678,
+      "retrieval_ms": 80,
+      "input_tokens": 890,
+      "output_tokens": 72,
+      "model": "openai/gpt-oss-20b",
+      "correct": true
+    },
+    {
+      "id": "o06",
+      "type": "out_of_scope",
+      "answer": "I couldn't find it in the handbook.",
+      "found": false,
+      "retrieved_pages": [
+        15,
+        68,
+        81
+      ],
+      "llm_ms": 5735,
+      "retrieval_ms": 49,
+      "input_tokens": 792,
+      "output_tokens": 173,
+      "model": "openai/gpt-oss-20b",
+      "correct": true
+    }
+  ]
+}
